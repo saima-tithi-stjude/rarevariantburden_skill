@@ -2,7 +2,7 @@
 
 Agent-oriented skill assets for operating the **nf-core/rarevariantburden** pipeline (CoCoRV-nf) — a rare variant burden test pipeline for case-only genetic studies using gnomAD public summary counts as controls.
 
-> **Development pipeline**: You must clone the repository locally
+> You must clone the repository locally
 > and always pass `--repo-path`. Do NOT use `nextflow run nf-core/rarevariantburden`.
 >
 > ```bash
@@ -19,7 +19,7 @@ Required run inputs:
 - Control data folder (downloaded gnomAD summary counts)
 - Output directory
 - Reference genome build: `GRCh37` or `GRCh38`
-- annotation tool folder (ANNOVAR or VEP)
+- annotation tool folder (ANNOVAR or VEP or both)
 
 ### Skip-Ahead Inputs
 
@@ -78,6 +78,28 @@ python scripts/run_rarevariantburden.py \
   --profile singularity \
   --executor local \
   --run
+```
+
+LSF submission:
+
+```bash
+python scripts/run_rarevariantburden.py \
+ --repo-path /path/to/rarevariantburden \
+ --case-vcf /path/to/joint.vcf.gz \
+ --case-samples /path/to/samples.txt \
+ --control-data-folder /path/to/gnomADv2exome \
+ --outdir /path/to/output \
+ --reference GRCh37 \
+ --gnomad-version v2exome \
+ --annovar-folder /path/to/annovarFolder \
+ --profile singularity,stjude_lsf \
+ --executor lsf \
+ --queue priority \
+ --project my_account \
+ --cpus 8 \
+ --memory-gb 8 \
+ --walltime 16:00 \
+ --run
 ```
 
 Slurm submission:

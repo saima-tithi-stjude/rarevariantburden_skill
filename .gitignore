@@ -10,3 +10,5 @@ test/
 null/
 ._*
 *.Rhistory*
+*.err
+*.out
