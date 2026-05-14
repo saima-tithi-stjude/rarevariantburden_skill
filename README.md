@@ -1,6 +1,6 @@
 # RareVariantBurden Skill
 
-Agent-oriented skill assets for operating the **nf-core/rarevariantburden** pipeline (CoCoRV-nf) — a rare variant burden test pipeline for case-only genetic studies using gnomAD public summary counts as controls.
+Agent-oriented skill assets for operating the [**nf-core/rarevariantburden** pipeline](https://nf-co.re/rarevariantburden/dev/) (CoCoRV-nf) — a rare variant burden test pipeline for case-only genetic studies using gnomAD public summary counts as controls.
 
 > You must clone the repository locally
 > and always pass `--repo-path`. Do NOT use `nextflow run nf-core/rarevariantburden`.
