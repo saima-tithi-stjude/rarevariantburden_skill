@@ -1,0 +1,12 @@
+.nextflow*
+work/
+data/
+results/
+.DS_Store
+testing/
+test*
+test/
+*.pyc
+null/
+._*
+*.Rhistory*

@@ -1,0 +1,12 @@
+name: rarevariantburden-nextflow
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python>=3.9
+  - openjdk>=17
+  - nextflow>=24.04.2
+  - pip
+  - pip:
+      - pyyaml
