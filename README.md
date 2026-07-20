@@ -277,6 +277,7 @@ python scripts/run_rarevariantburden.py \
 - Reference GRCh38 → use gnomAD version `v4exome` or `v4genome`.
 - Default annotation tool is ANNOVAR (`annotationTool: ANNOVAR`). Valid values: ANNOVAR, VEP, ANNOVAR_VEP.
 - Use `--chr-set '21 22'` to restrict to specific chromosomes (e.g. for testing). Default is `'1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22'`. No `chr` prefix — must match the pipeline schema exactly.
+- `--af-max <value>` sets the maximum alternate allele frequency (`AFMax`). If omitted, it's derived from `--gnomad-version` (`0.0001` for v2exome, `0.0005` for v4exome/v4genome); if both are omitted, the pipeline's own default (`0.0005`) applies.
 - `--acan-config` and `--variant-exclude` override the corresponding files that the pipeline resolves automatically from inside `--control-data-folder`. Only provide these if you need custom ancestry stratification or a custom variant exclusion list.
 - Scheduler execution selected with `--executor` (`lsf`, `slurm`, `pbs`, `sge`).
 - Full behavior contract, triage order, and response requirements are in `SKILL.md`.

@@ -5,7 +5,7 @@ description: |
 argument-hint: |
   Provide: --repo-path (local clone of the pipeline repo), --case-vcf (joint-called VQSR VCF, or NA when using --case-vcf-file-list), --case-samples (sample ID text file), --control-data-folder, --outdir, and one of --reference GRCh37/GRCh38.
   Skip-ahead (pre-computed): --case-vcf-file-list, --case-normalized-vcf-file-list, --case-annotated-vcf-file-list, --case-genotype-gds-file-list + --case-annotation-gds-file-list (paired), --case-population.
-  Optional: --annovar-folder, --vep-folder, --gnomad-version, --annotation-tool, --chr-set, --acan-config, --variant-exclude, --profile, --executor, --dry-run/--run.
+  Optional: --annovar-folder, --vep-folder, --gnomad-version, --annotation-tool, --chr-set, --af-max, --acan-config, --variant-exclude, --profile, --executor, --dry-run/--run.
 user-invocable: true
 version: 1.0.0
 license: MIT
@@ -170,6 +170,7 @@ python scripts/run_rarevariantburden.py \
   current process environment (for local runs) and into the generated launch script (for scheduler
   submissions). Provide an absolute path to a shared directory for image caching.
 - Use `--chr-set` to restrict processing to a subset of chromosomes (e.g. `'21 22'` for testing). Default is all autosomes `1 2 3 ... 22`. Chromosome names must NOT have a `chr` prefix.
+- `--af-max` sets the maximum alternate allele frequency threshold (`AFMax`). Resolution order: (1) explicit `--af-max` always wins; (2) if omitted, the helper derives it from `--gnomad-version` — `0.0001` for `v2exome`, `0.0005` for `v4exome`/`v4genome`; (3) if both are omitted, `AFMax` is left out of the generated params and the pipeline's own default (`0.0005`) applies.
 - Do not use `-c` for pipeline parameters; use `--params-file` or CLI flags.
 - Do not invent nf-core parameters not in the schema.
 - For run mode, verify runtime prerequisites: Java 17+, Nextflow, and profile-specific tools (docker, singularity/apptainer, conda/mamba).

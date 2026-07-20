@@ -24,6 +24,14 @@ GNOMAD_REFERENCE_MAP = {
     "v4genome": ["GRCh38"],
 }
 
+# Recommended AFMax (max alternate allele frequency) per gnomAD control version.
+# Used only when the user does not explicitly pass --af-max.
+AFMAX_DEFAULTS_BY_GNOMAD_VERSION = {
+    "v2exome": 0.0001,
+    "v4exome": 0.0005,
+    "v4genome": 0.0005,
+}
+
 VALID_REFERENCES = ["GRCh37", "GRCh38"]
 VALID_GNOMAD_VERSIONS = list(GNOMAD_REFERENCE_MAP.keys())
 VALID_ANNOTATION_TOOLS = ["ANNOVAR", "VEP", "ANNOVAR_VEP"]
@@ -65,6 +73,27 @@ def normalize_walltime_hhmmss(value, label):
     if re.fullmatch(r"\d{1,3}:\d{2}", value):
         return f"{value}:00"
     fail(f"Invalid {label} format: {value!r}. Use HH:MM or HH:MM:SS")
+
+
+def resolve_af_max(args):
+    """Resolve the effective AFMax value.
+
+    Precedence:
+      1. User-specified --af-max: always used as-is.
+      2. Not specified: derive from --gnomad-version
+         (0.0001 for v2exome, 0.0005 for v4exome/v4genome).
+      3. Neither specified: leave unset so the pipeline's own default (0.0005) applies.
+    """
+    if args.af_max is not None:
+        return args.af_max
+    if args.gnomad_version and args.gnomad_version in AFMAX_DEFAULTS_BY_GNOMAD_VERSION:
+        derived = AFMAX_DEFAULTS_BY_GNOMAD_VERSION[args.gnomad_version]
+        info(
+            f"--af-max not specified; using {derived} as the recommended AFMax "
+            f"for --gnomad-version {args.gnomad_version}."
+        )
+        return derived
+    return None
 
 
 def has_any_command(names):
@@ -502,6 +531,8 @@ def build_params_content(args):
         lines.append(f"genderFile: {args.gender_file}")
     if args.top_k_genes:
         lines.append(f"topKGenes: {args.top_k_genes}")
+    if args.af_max is not None:
+        lines.append(f"AFMax: {args.af_max}")
     if args.acan_config:
         lines.append(f"ACANConfig: {args.acan_config}")
     if args.variant_exclude:
@@ -562,6 +593,8 @@ def build_nextflow_command(args, generated_params_path):
             cmd.extend(["--genderFile", args.gender_file])
         if args.top_k_genes:
             cmd.extend(["--topKGenes", str(args.top_k_genes)])
+        if args.af_max is not None:
+            cmd.extend(["--AFMax", str(args.af_max)])
         if args.acan_config:
             cmd.extend(["--ACANConfig", args.acan_config])
         if args.variant_exclude:
@@ -830,6 +863,12 @@ def parse_args():
                      help="Optional file with sample gender info for sex-stratified analysis")
     opt.add_argument("--top-k-genes", type=int, default=0,
                      help="Number of top genes for which to generate detailed variant/sample lists")
+    opt.add_argument("--af-max", type=float, default=None,
+                     help="Maximum alternate allele frequency threshold (AFMax). "
+                          "If not specified, derived from --gnomad-version: "
+                          "0.0001 for v2exome, 0.0005 for v4exome/v4genome. "
+                          "If --gnomad-version is also unspecified, the pipeline's "
+                          "own default (0.0005) applies.")
     opt.add_argument("--acan-config", default="",
                      help="Path to the ACAN configuration file specifying ancestry groups for analysis. "
                           "Defaults to the file inside --control-data-folder "
@@ -942,6 +981,8 @@ def main():
     if args.submit:
         args.run = True
 
+    args.af_max = resolve_af_max(args)
+
     args.runtime_prefix = None
     args.generated_params_path = ""
 
@@ -986,6 +1027,8 @@ def main():
     print(f"Reference    : {args.reference}")
     if args.gnomad_version:
         print(f"gnomAD ver   : {args.gnomad_version}")
+    if args.af_max is not None:
+        print(f"AFMax        : {args.af_max}")
     if args.singularity_cache:
         print(f"Singularity$ : NXF_SINGULARITY_CACHEDIR={args.singularity_cache}")
 

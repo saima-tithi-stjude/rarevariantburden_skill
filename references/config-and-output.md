@@ -18,6 +18,7 @@
 | `vepFolder` | `--vepFolder` | string | — | VEP resource folder |
 | `genderFile` | `--genderFile` | string | — | Optional gender file for sex-stratified analysis |
 | `topKGenes` | `--topKGenes` | integer | — | Number of top genes for detailed output |
+| `AFMax` | `--AFMax` (helper: `--af-max`) | number | `0.0005` (pipeline); helper derives `0.0001`/`0.0005` from `--gnomad-version` when `--af-max` is omitted | Maximum alternate allele frequency threshold. See helper resolution order below. |
 | `chrSet` | `--chrSet` | string | `1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22` | Space-separated chromosome list **without** `chr` prefix. Default is all autosomes 1–22. Example subset for testing: `'21 22'`. |
 | `ACANConfig` | `--acan-config` | file path | `<controlDataFolder>/stratified_config_gnomadV4.asj.txt` | Ancestry group configuration file for CoCoRV stratified analysis. Override only if using a custom ancestry stratification. |
 | `variantExclude` | `--variant-exclude` | file path | `<controlDataFolder>/gnomAD41WGSExtraExcludeInCodingExcludeTAS2R46.txt.gz` | One-column file of variants to exclude from analysis. Override only if using a custom exclusion list. |
